@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #box {
+            border: 1px solid red;
+            width: 100px;
+            height: 100px;
+            background-color: yellow;
+            text-align: center;
+            line-height: 100px;
+            left: 0px;
+            top: 0px;
+            position: relative;
+            transition: left 1s cubic-bezier(.45,-0.12,.59,1.34);
+        }
+    </style>
+</head>
+<body>
+    
+    <h1>Hello world</h1>
+    <button id="moveBtn">이동</button>
+    <div id="box">20:80</div>
+
+    <script>
+        const moveBtn = document.querySelector("#moveBtn");
+        const box = document.querySelector("#box");
+
+        // DOM 참조 확인
+        console.dir(moveBtn);
+        //console.dir(box);
+
+        // -- 의사 코드 --
+        // 1. 버튼 이벤트 반응 확인
+        // 2. 특정 요소 셀렉트 (DOM 확인)
+        // 3. 특정 요소의 속성 변경
+
+        moveBtn.onclick = function() {
+            //alert("버튼 눌러 졌다!");
+            //console.log(">>> 버튼 눌러 짐")
+    
+            moveBtn.innerText = "move";
+    
+            //console.dir( box.style );
+            box.style.backgroundColor = "pink";
+            box.style.left = 400 + "px";
+
+            // box의 위치 변경
+        }
+    </script>
+</body>
+</html>
