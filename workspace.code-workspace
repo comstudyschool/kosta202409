@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "proj01"
+		},
+		{
+			"path": "proj02express"
 		}
 	]
 }
