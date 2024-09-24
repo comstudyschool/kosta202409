@@ -20,7 +20,7 @@
                 <% carList.forEach((car, index)=>{ %>
                     <tr>
                         <td><%= index %></td>
-                        <td><%= car.name %></td>
+                        <td><a href="/car/detail?_id=<%=car._id %>"><%= car.name %></a></td>
                         <td><%= car.price %></td>
                         <td><%= car.company %></td>
                         <td><%= car.year %></td>

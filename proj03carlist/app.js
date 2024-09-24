@@ -20,6 +20,8 @@ const carList = [
     {_id:1003, name:"BMW", price:5500, company:"BMW", year:2018},
     {_id:1004, name:"S80", price:4500, company:"VOLVO", year:2023}
 ];
+let seq_id = 1005;
+
 // 목록
 router.route("/car/list").get((req, res)=>{
     req.app.render('car/list',{carList}, (err, html) => {
@@ -36,42 +38,75 @@ router.route("/car/input")
         });
     })
     .post((req, res)=>{
-        // 일머리가 중요해!!!
-        // 파라미터 값 가져오기
-        // 가져온 값 확인
-        // 리스트에 객체로 추가
-        // 목록으로 redirect
-        console.log(req.body);
+        const newCar = {
+            _id: seq_id++,
+            name: req.body.name,
+            price: req.body.price,
+            company: req.body.company,
+            year: req.body.year
+        }
+        carList.push(newCar);
         res.redirect("/car/list");
     });
 // 상세 보기
 router.route("/car/detail")
 .get((req, res)=>{
-    req.app.render('car/detail',{}, (err, html) => {
-        if (err) throw err;
-        res.end(html);
+    const index = carList.findIndex((car)=>{
+        return car._id == req.query._id;
     });
-})
-.post();
+    if(index != -1) {
+        req.app.render('car/detail',{car: carList[index]}, (err, html) => {
+            if (err) throw err;
+            res.end(html);
+        });
+    } else {
+        console.log("해당 요소를 찾을 수 없습니다!");
+        res.redirect("/car/list");
+    }
+});
 // 수정
 router.route("/car/modify")
 .get((req, res)=>{
-    req.app.render('car/modify',{}, (err, html) => {
-        if (err) throw err;
-        res.end(html);
+    const index = carList.findIndex((car)=>{
+        return car._id == req.query._id;
     });
+    if(index != -1) {
+        req.app.render('car/modify',{car: carList[index]}, (err, html) => {
+            if (err) throw err;
+            res.end(html);
+        });
+    } else {
+        console.log("해당 요소를 찾을 수 없습니다!");
+        res.redirect("/car/list");
+    }
 })
-.post();
+.post((req, res)=>{
+    const index = carList.findIndex((car)=>{
+        return car._id == req.body._id;
+    });
+    if(index != -1) {
+        const newCar = {
+            _id: req.body._id,
+            name: req.body.name,
+            price: req.body.price,
+            company: req.body.company,
+            year: req.body.year
+        }
+        carList[index] = newCar;
+    }
+    res.redirect("/car/list");
+});
 // 삭제
 router.route("/car/delete")
 .get((req, res)=>{
-    req.app.render('car/delete',{}, (err, html) => {
-        if (err) throw err;
-        res.end(html);
+    const index = carList.findIndex((car)=>{
+        return car._id == req.query._id;
     });
-})
-.post();
-
+    if(index != -1) {
+        carList.splice(index, 1);
+    }
+    res.redirect("/car/list");
+});
 
 // 모든 라우터 설정이 완료 된 후에 미들웨어 등록해야 함.
 app.use('/', router);
