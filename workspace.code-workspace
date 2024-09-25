@@ -11,6 +11,15 @@
 		},
 		{
 			"path": "proj04cheerio"
+		},
+		{
+			"path": "proj05reactcdn"
+		},
+		{
+			"path": "proj06reactcra"
 		}
-	]
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "proj05reactcdn"
+	}
 }
