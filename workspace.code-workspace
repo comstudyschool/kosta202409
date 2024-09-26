@@ -1,25 +1,7 @@
 {
 	"folders": [
 		{
-			"path": "proj01"
-		},
-		{
-			"path": "proj02express"
-		},
-		{
-			"path": "proj03carlist"
-		},
-		{
-			"path": "proj04cheerio"
-		},
-		{
-			"path": "proj05reactcdn"
-		},
-		{
-			"path": "proj06reactcra"
+			"path": "proj07todolist"
 		}
-	],
-	"settings": {
-		"liveServer.settings.multiRootWorkspaceName": "proj05reactcdn"
-	}
+	]
 }
