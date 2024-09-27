@@ -39,6 +39,7 @@ const Container = () => {
                         key={todo._id} 
                         todo={todo} 
                         todoList={todoList} 
+                        editTitle={editTitle}
                         toggleTodo={toggleTodo}
                         setTodoList={setTodoList} />);
         });
@@ -63,13 +64,43 @@ const Container = () => {
         });
     }
 
+    const [curTitle, setCurTitle] = useState("");
+    const [selectTodo, setSelectTodo] = useState({});
+    const editOkHandler = (e) => {
+        // 수정 완료 기능
+        console.log(">>> editOkHandler() - Container :", curTitle)
+        console.dir(selectTodo);
+        // selectTodo에서 _id 참조해서 todoList의 몇번째 index인지 찾기
+        const idx = todoList.findIndex((todo)=> selectTodo._id === todo._id);
+        if(idx != -1) {
+            // state의 todoList를 복제한다. (Spreed 연산자)
+            const newList = [...todoList];
+            // 복제 된 todoList의 요소를 새 title로 변경한다.
+            newList[idx].title = curTitle;
+            // todoList state를 수정된 내용으로 (참조를)변경한다.(적용 -> 리렌더링)
+            setTodoList(newList);
+            setCurTitle("");
+        }
+    }
+
+    const editTitle = (curTodo) => {
+        // todoList의 title을 선택하면 작동
+        console.log(">>> editTitle() - Container :", curTodo);
+        setCurTitle(curTodo.title);
+        setSelectTodo(curTodo);
+    }
 
     return (<div className="container" style={{marginTop:"30px"}} >
-        <h3>할일 입력</h3>
         <p>
+            <h3>할일 입력</h3>
             <input type="text" value={newTodo} onChange={(e)=>{setNewTodo(e.target.value)}} />
             <button onClick={buttonHandler}>SAVE</button>
-            {newTodo}
+            <hr />
+        </p>
+        <p>
+            <h3>할일 수정</h3>
+            <input type="text" value={curTitle} onChange={(e)=>{setCurTitle(e.target.value)}} />
+            <button onClick={editOkHandler}>EDIT</button>
         </p>
         <hr />
         <h3>할일 목록</h3>
