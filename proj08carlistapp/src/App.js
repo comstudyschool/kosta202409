@@ -38,7 +38,14 @@ const App = () => {
     const removeCarData = (car) => {
         // alert(`${_id},${name}, ${price}, ${company}, ${company}`);
         // 부트스트랩 모달창에 상세정보 표시 하기
-        setModalData(car);
+        const idx = carList.findIndex((item)=>{
+            return car._id === item._id;
+        });
+        if(idx != -1) {
+            const newList = [...carList];
+            newList.splice(idx, 1);
+            setCarList(newList);
+        }
     }
 
     const modifyOk = (modifyCarData) => {
