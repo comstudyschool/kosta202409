@@ -30,14 +30,10 @@ const App = () => {
     }
 
     const modifyCarData = (car) => {
-        // alert(`${_id},${name}, ${price}, ${company}, ${company}`);
-        // 부트스트랩 모달창에 상세정보 표시 하기
         setModalData(car);
     }
 
     const removeCarData = (car) => {
-        // alert(`${_id},${name}, ${price}, ${company}, ${company}`);
-        // 부트스트랩 모달창에 상세정보 표시 하기
         const idx = carList.findIndex((item)=>{
             return car._id === item._id;
         });
