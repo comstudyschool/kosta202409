@@ -1,11 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const CarModifyModal = ({modalData, modifyOk}) => {
-    const [carName, setName] = useState(modalData.name);
-    const [price, setPrice] = useState(modalData.price);
-    const [company, setCompany] = useState(modalData.company);
-    const [year, setYear] = useState(modalData.year);
+    const [carName, setName] = useState("");
+    const [price, setPrice] = useState(0);
+    const [company, setCompany] = useState("");
+    const [year, setYear] = useState(0);
 
+    // sueEffect 훅을 이용해서 상태 변경 확인
+    useEffect(() => {
+        console.log("특정 상태나 props가 변경되었습니다.");
+        setName(modalData.name);
+        setPrice(modalData.price);
+        setCompany(modalData.company);
+        setYear(modalData.year);
+    }, [modalData]);
+    
     return (<>
         {/* <!-- The Modal --> */}
         <div className="modal fade" id="modifyModal">
@@ -28,19 +37,19 @@ const CarModifyModal = ({modalData, modifyOk}) => {
                         </tr>
                         <tr>
                             <th>NAME</th>
-                            <td><input type="text" value={carName=="#!*"?modalData.name:carName} onChange={e=>{setName(e.target.value)}} /></td>
+                            <td><input type="text" value={carName} onChange={e=>{setName(e.target.value)}} /></td>
                         </tr>
                         <tr>
                             <th>PRICE</th>
-                            <td><input type="text" value={price==-1?modalData.price:price} onChange={e=>{setPrice(e.target.value)}} /></td>
+                            <td><input type="text" value={price} onChange={e=>{setPrice(e.target.value)}} /></td>
                         </tr>
                         <tr>
                             <th>COMPANY</th>
-                            <td><input type="text" value={company=="#!*"?modalData.company:company} onChange={e=>{setCompany(e.target.value)}} /></td>
+                            <td><input type="text" value={company} onChange={e=>{setCompany(e.target.value)}} /></td>
                         </tr>
                         <tr>
                             <th>YEAR</th>
-                            <td><input type="text" value={year==-1?modalData.year:year} onChange={e=>{setYear(e.target.value)}} /></td>
+                            <td><input type="text" value={year} onChange={e=>{setYear(e.target.value)}} /></td>
                         </tr>
                     </tbody>
                     </table>
