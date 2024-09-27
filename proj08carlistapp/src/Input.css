@@ -1,0 +1,17 @@
+div.input-group {
+    /*background-color: yellow;*/
+    margin: 0;
+    padding: 0;
+}
+
+div {
+    /*border: 1px solid red;*/
+}
+
+.input-group-prepend span {
+    width: 150px;
+}
+
+button[class="btn btn-primary btn-block"] {
+    padding: 13px;
+}
