@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>중고 자동차 목록</h2>
+    <div>
+        <div>
+            <form id="inputForm">
+                <input type="text" name="carId" value="">
+                <ul>
+                    <li>차종: <input type="text" value="BMW" name="name" / ></li>
+                    <li>가격: <input type="text" value="3400" name="price" / ></li>
+                    <li>회사: <input type="text" value="BMW" name="company" / ></li>
+                    <li>연식: <input type="text" value="2017" name="year" / ></li>
+                </ul>
+            </form>
+            <button id="saveBtn">Save</button>
+        </div>
+        <p>10년을 타도 새차 같은 느낌!</p>
+        <p><input type="text"><button>검색</button></p>
+        <table width="100%" border="1">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>NAME</th>
+                    <th>PRICE</th>
+                    <th>COMPANY</th>
+                    <th>YEAR</th>
+                    <th>삭제</th>
+                    <th>수정</th>
+                </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+        </table>
+    </div>
+
+    <script>
+        // 자바스크립트 객체를 쿼리스트링으로 변환.
+        function objectToQueryString(obj) {
+            const params = new URLSearchParams();
+            for (const key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    params.append(key, obj[key]);
+                }
+            }
+            return params.toString();
+        }
+        
+        const myAjax = (method, obj, tarUrl, callback) => {
+            const xhr = new XMLHttpRequest();
+            xhr.addEventListener('readystatechange', (e)=>{
+                callback(xhr);
+            });
+            xhr.open(method, tarUrl, true);
+            if(method.toUpperCase() != "GET") {
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.send(objectToQueryString(obj));
+            } else {
+                xhr.send();
+            }
+        }
+
+        function deleteBtnHandler(btn) {
+            console.log(">>> deleteBtnHandler 호출 ...", btn.dataset.id);
+            const delId = btn.dataset.id;
+            myAjax("delete", {id:delId}, `http://localhost:3035/products/${delId}`, (xhr)=>{
+                drawList();
+            });
+        }  
+
+        function editBtnHandler(btn) {
+            console.log(">>> editBtnHandler 호출 ...", btn);
+            const delId = btn.dataset.id;
+            myAjax("get", {id:delId}, `http://localhost:3035/products/${delId}`, (xhr)=>{
+                const inputForm = document.getElementById("inputForm");
+                if(xhr.readyState === 4 && xhr.status === 200) {
+                    const car = JSON.parse(xhr.responseText.trim());
+                    inputForm.carId.value = car.id;
+                    window.carId = car.id;
+                    console.log(inputForm.carId.valule);
+                    inputForm.name.value = car.name;
+                    inputForm.price.value = car.price;
+                    inputForm.company.value = car.company;
+                    inputForm.year.value = car.year;
+                    document.getElementById("saveBtn").innerText = "Edit";
+                }
+            });
+        }
+
+        document.getElementById("saveBtn").onclick = function(e) {
+            event.preventDefault();
+            const inputForm = document.getElementById("inputForm");
+            console.log(">>> saveBtnHandler 호출 ...", e.target);
+            const obj = {
+                name: inputForm.name.value,
+                price: Number(inputForm.price.value),
+                company: inputForm.company.value,
+                year: Number(inputForm.year.value)
+            }
+            if(e.target.innerText == "Save") {
+                myAjax("post", obj, "http://localhost:3035/products", (xhr)=>{
+                    if(xhr.readyState === 4 && xhr.status === 200) {
+                        drawList();
+                    }
+                });
+            } else {
+                //const carId = Number(inputForm.carId.valule);
+                const carId = window.carId;
+                console.log(carId);
+                obj.id = carId;
+                myAjax("post", obj, `http://localhost:3035/products/${carId}`, (xhr)=>{
+                if(xhr.readyState === 4 && xhr.status === 200) {
+                    document.getElementById("saveBtn").innerText = "Save";
+                    drawList();
+                    inputForm.carId.value = "";
+                    inputForm.name.value = "";
+                    inputForm.price.value = "";
+                    inputForm.company.value = "";
+                    inputForm.year.value = "";
+                    document.getElementById("saveBtn").innerText = "Save";
+                }
+            });
+            }
+        }
+
+        const drawList = () => {
+            myAjax("get", {}, "http://localhost:3035/products", (xhr)=>{
+                if(xhr.readyState === 4 && xhr.status === 200) {
+                    const carList = JSON.parse(xhr.responseText.trim());
+                    let html = "";
+                    carList.forEach(car => {
+                        let trTemp = `<tr>
+                            <td>${car.id}</td>
+                            <td>${car.name}</td>
+                            <td>${car.price}</td>
+                            <td>${car.company}</td>
+                            <td>${car.year}</td>
+                            <td><button data-id="${car.id}" onclick="deleteBtnHandler(this)">삭제</button></td>
+                            <td><button data-id="${car.id}" onclick="editBtnHandler(this)">수정</button></td>
+                        </tr>`;
+                        html += trTemp;
+                    });
+                    document.getElementById('tbody').innerHTML = html;
+                }
+            });
+        }
+
+        drawList();
+    </script>
+</body>
+</html>

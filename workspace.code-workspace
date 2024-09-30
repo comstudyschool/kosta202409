@@ -1,7 +1,10 @@
 {
 	"folders": [
 		{
-			"path": "proj08carlistapp"
+			"path": "proj09nodeserver"
+		},
+		{
+			"path": "proj09client-js"
 		}
 	]
 }

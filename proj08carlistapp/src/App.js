@@ -14,7 +14,7 @@ const App = () => {
     ];
     const [carList, setCarList] = useState(carArr);
     const [seqId, setSeqId] = useState(5);
-    const [modalData, setModalData] = useState({_id:-1, name:"#!*", price:-1, company:"#!*", year:-1});
+    const [modalData, setModalData] = useState({_id:-1, name:"#", price:-1, company:"#", year:-1});
 
     const appendCarData = (newCarData) => {
         newCarData._id = seqId;
