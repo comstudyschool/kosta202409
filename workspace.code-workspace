@@ -1,13 +1,7 @@
 {
 	"folders": [
 		{
-			"path": "proj09nodeserver"
-		},
-		{
-			"path": "proj09client-js"
-		},
-		{
-			"path": "proj10react-router"
+			"path": "proj11react-ajax"
 		}
 	]
 }
