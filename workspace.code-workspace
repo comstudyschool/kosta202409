@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "proj09client-js"
+		},
+		{
+			"path": "proj10react-router"
 		}
 	]
 }
