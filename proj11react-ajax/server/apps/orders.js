@@ -4,7 +4,6 @@ const app = express();
 const cors = require('cors');
 const router = express.Router();
 
-app.set('port', 3001);
 app.use(cors());
 
 router.route('/').get( (req, res) => {

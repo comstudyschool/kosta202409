@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "proj11react-ajax"
+		},
+		{
+			"path": "proj12react-redux"
 		}
 	]
 }
