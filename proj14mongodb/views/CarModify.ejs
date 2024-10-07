@@ -6,7 +6,8 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>자동차 정보 수정 (ID: <%=car._id %>)</h1>
+    <h1>자동차 정보 수정</h1>
+    <p>(ID: <%=car._id %>)</p>
     <form action="/car/modify" method="post">
         <input type="hidden" name="id" value="<%=car._id %>">
         <table>

@@ -97,7 +97,7 @@ app.get('/car/detail', async (req, res)=>{
     }
 });
 
-// 상세보기 페이지로 forward
+// 수정 페이지로 forward
 app.get('/car/modify', async (req, res)=>{
     try{
         await dbClient.connect();
