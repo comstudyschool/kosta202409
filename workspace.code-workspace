@@ -1,13 +1,7 @@
 {
 	"folders": [
 		{
-			"path": "proj11react-ajax"
-		},
-		{
-			"path": "proj12react-redux"
-		},
-		{
-			"path": "proj13react-firebase"
+			"path": "proj14mongodb"
 		}
 	]
 }
