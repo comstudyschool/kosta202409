@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" >
+        <title>상품 목록</title>
+    </head>
+    <body>
+        <h1>상품 목록</h1>
+        <table border="1" width="500">
+            <tr>
+                <th>ID</th>
+                <th>NAME</th>
+                <th>PRICE</th>
+                <th>ADD CART</th>
+            </tr>
+    <%
+        carList.forEach((car, index) => {
+    %>
+            <tr>
+                <td><%=car.id %></td>
+                <td><%=car.name %></td>
+                <td><%=car.price %></td>
+                <td><a href="/session/cart?id=<%=car.id %>">장바구니</a></td>
+            </tr>
+    <%
+        });
+    %>
+        </table>
+    </body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>로그인 폼</title>
+    </head>
+    <body>
+        <h1>로그인 폼</h1>
+        <form method="post" action="/session/login">
+            ID: <input type="text" name="id" value="hong" /><br />
+            PASS: <input type="password" name="password" value="1234" /><br />
+            <input type="submit" value="Log-In" />
+        </form>
+        
+        <script>
+                const cookieData = decodeURIComponent(document.cookie);
+                const cookieObj = JSON.parse(cookieData.split("j:")[1]);
+                console.log("user name:", cookieObj.name);
+        </script>
+    </body>
+</html>

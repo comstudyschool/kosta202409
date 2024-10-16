@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" >
+        <title>장바구니 목록</title>
+    </head>
+    <body>
+        <h1>장바구니 목록</h1>
+        <table border="1" width="500">
+            <tr>
+                <th>ID</th>
+                <th>NAME</th>
+                <th>PRICE</th>
+                <th>REMOVE CART</th>
+            </tr>
+    <%
+        cartList.forEach((car, index) => {
+    %>
+            <tr>
+                <td><%=car.id %></td>
+                <td><%=car.name %></td>
+                <td><%=car.price %></td>
+                <td><a href="/session/removeCart?id=<%=car.id %>">제거</a></td>
+            </tr>
+    <%
+        });
+    %>
+        </table>
+        
+    </body>
+</html>
