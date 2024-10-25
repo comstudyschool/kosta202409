@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <h1>Node.js 소켓 io 실습</h1>
+    <div>
+        1. 유알엘: <input type="text" id="connectUrl" value="http://127.0.0.1:3000">
+        <button id="connectBtn">접속</button>
+    </div>
+    <div>
+        2. 메세지: <input type="text" id="messageInput" value="Hello world">
+        <button id="sendBtn">전송</button>
+    </div>
+    <div>
+        3. 결과: 
+        <div id="resultBox"></div>
+    </div>
+
+    <!-- 
+    참고: jQuery 의 특징
+    1. DOM 셀렉터 쉽게
+    2. Ajax를 쉽게
+    3. 애니메이션 효과
+    -->
+    <script>
+        // document.querySelecot('#connectBtn'); 대신 다음 jQuery 사용.
+        // $('#connectBtn').click((event)=>{
+        //     alert("버튼 클릭!");
+        // });
+    </script>
+    
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+
+        let socket = null;
+
+        const connectBtn = document.querySelector('#connectBtn');
+   
+			  // 버튼이 눌러지면 연결 됨.
+        connectBtn.onclick = function() {
+            socket = io('http://127.0.0.1:3000');  // 서버 포트에 맞게 수정
+
+            if(socket) {
+                // 연결 성공하면 서버에서 메세지 받기
+                socket.on('connect', () => {
+                    console.log('>>> 서버 연결 성공:');
+                    socket.on('message', (msg)=>{
+                        console.log('서버 메세지 확인:', msg);
+                    });
+                });
+            }
+        }
+
+        // 오늘 과제
+        // 1. 1대1 채팅 기능
+        // 2. 1대다 채팅에서 귓속말 기능
+        // 3. 채팅룸 기능
+        // 주말 과제
+        // 1. Soket.io 또는 WebSocket을 이용한 온라인 전자칠판 구현.
+        // 제출은 카페 과제함에 해 주세요.
+    </script>
+    
+</body>
+</html>
