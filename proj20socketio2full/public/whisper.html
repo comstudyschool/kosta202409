@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>채팅방 기능</title>
+</head>
+<body>
+    <h1>네임스페이스 채팅</h1>
+    <button id="chatNamespace">Chat 네임스페이스 연결</button>
+    <button id="newsNamespace">News 네임스페이스 연결</button>
+    <h1>채팅방 기능</h1>
+    <input type="text" id="roomInput" placeholder="방 이름 입력">
+    <button id="joinRoomBtn">방 참가</button>
+
+    <h1>귓속말 기능</h1>
+    <input type="text" id="targetId" placeholder="대상 사용자 ID">
+    <input type="text" id="messageInput" placeholder="메시지 입력">
+    <button id="sendBtn">전송</button>
+
+    <ul id="messages"></ul>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+        let socket;
+
+        document.getElementById('chatNamespace').addEventListener('click', () => {
+            socket = io('/chat');
+            setupSocketEvents();
+        });
+
+        document.getElementById('newsNamespace').addEventListener('click', () => {
+            socket = io('/news');
+            setupSocketEvents();
+        });
+
+        function setupSocketEvents() {
+            socket.on('message', (msg) => {
+                const li = document.createElement('li');
+                li.textContent = msg;
+                messages.appendChild(li);
+            });
+
+            sendBtn.addEventListener('click', () => {
+                const to = targetId.value;
+                const message = messageInput.value;
+                socket.emit('whisper', { to, message });
+            });
+        }
+
+        document.getElementById('joinRoomBtn').addEventListener('click', () => {
+            const room = roomInput.value;
+            socket.emit('joinRoom', room);
+        });
+    </script>
+</body>
+</html>
