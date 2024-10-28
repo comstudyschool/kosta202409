@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat 네임스페이스</title>
+</head>
+<body>
+  <h1>Chat 네임스페이스</h1>
+  <input type="text" id="messageInput" placeholder="메시지 입력">
+  <button id="sendBtn">전송</button>
+  <ul id="messages"></ul>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io('/chat'); // /chat 네임스페이스에 연결
+
+    const messageInput = document.getElementById('messageInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const messages = document.getElementById('messages');
+
+    sendBtn.addEventListener('click', () => {
+      const msg = messageInput.value;
+      socket.emit('message', msg); // 서버로 메시지 전송
+      messageInput.value = '';
+    });
+
+    socket.on('message', (msg) => {
+      const li = document.createElement('li');
+      li.textContent = msg;
+      messages.appendChild(li);
+    });
+  </script>
+</body>
+</html>

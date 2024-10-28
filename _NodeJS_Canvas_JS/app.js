@@ -1,3 +1,4 @@
+// app.js 서버
 var http = require('http');
 var express = require('express');
 var app = express();
@@ -13,7 +14,7 @@ app.use('/public', static(path.join(__dirname, '/public')));
 
 
 server.listen(app.get('port'), function () {
-    console.log('서버가 실행:', app.get('port'));
+    console.log('서버가 실행>>> http://localhost:3000/public/board.html', app.get('port'));
 });
 
 var io = socketio.listen(server);

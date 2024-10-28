@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Socket.io 채팅 룸</h1>
+    <div>
+      <label for="roomInput">방 이름:</label>
+      <input type="text" id="roomInput" placeholder="방 이름 입력">
+      <button id="joinRoomBtn">방 참가</button>
+    </div>
+    <div>
+      <input type="text" id="messageInput" placeholder="메시지 입력">
+      <button id="sendBtn">전송</button>
+    </div>
+    <ul id="messages"></ul>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io(); // 서버와 연결
+
+        const roomInput = document.getElementById('roomInput');
+        const joinRoomBtn = document.getElementById('joinRoomBtn');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const messages = document.getElementById('messages');
+
+        let currentRoom = ''; // 현재 참가한 방 이름 저장
+
+        // 방 참가 버튼 클릭 시 실행
+        joinRoomBtn.addEventListener('click', () => {
+        const room = roomInput.value.trim();
+        if (room) {
+            currentRoom = room;
+            socket.emit('joinRoom', room); // 서버에 방 참가 요청
+        }
+        });
+
+        // 메시지 전송 버튼 클릭 시 실행
+        sendBtn.addEventListener('click', () => {
+        const message = messageInput.value.trim();
+        if (message && currentRoom) {
+            socket.emit('message', { room: currentRoom, message }); // 방에 메시지 전송
+            messageInput.value = ''; // 입력 창 초기화
+        }
+        });
+
+        // 서버로부터 메시지를 받을 때 실행
+        socket.on('message', (msg) => {
+            const li = document.createElement('li');
+            li.textContent = msg;
+            messages.appendChild(li); // 메시지를 목록에 추가
+        });
+    </script>
+
+</body>
+</html>

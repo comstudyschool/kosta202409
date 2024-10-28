@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>News 네임스페이스</title>
+</head>
+<body>
+  <h1>News 네임스페이스</h1>
+  <input type="text" id="updateInput" placeholder="업데이트 내용 입력">
+  <button id="sendUpdateBtn">업데이트 전송</button>
+  <ul id="updates"></ul>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io('/news'); // /news 네임스페이스에 연결
+
+    const updateInput = document.getElementById('updateInput');
+    const sendUpdateBtn = document.getElementById('sendUpdateBtn');
+    const updates = document.getElementById('updates');
+
+    sendUpdateBtn.addEventListener('click', () => {
+      const update = updateInput.value;
+      socket.emit('update', update); // 서버로 업데이트 전송
+      updateInput.value = '';
+    });
+
+    socket.on('update', (msg) => {
+      const li = document.createElement('li');
+      li.textContent = msg;
+      updates.appendChild(li);
+    });
+  </script>
+</body>
+</html>
