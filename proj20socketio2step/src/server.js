@@ -26,18 +26,49 @@ const io = new Server(server, {
     cors: {methods: ['GET','POST','PUT','DELETE']}
 });
 
-io.on('connection', (socket)=>{
-    console.log('클라이언트 소켓 접속:',  socket.id);
-    
+// io.on('connection', (socket)=>{
+//     console.log('클라이언트 소켓 접속:',  socket.id);
+//     socket.on('message', (msg) => {
+//         console.log(msg);
+//         //socket.emit('message', msg);
+//         io.emit('message', `${socket.id}: ${msg}`);
+//     });
+
+//     // socket 접속 해제 시 발생 이벤트
+//     socket.on('disconnect', () => {
+//         console.log(`사용자 연결 해제: ${socket.id}`);
+//     });
+// });
+
+const chatNamespace = io.of('/chat');
+const newsNamespace = io.of('/news');
+
+chatNamespace.on('connection', (socket) => {
+    console.log('Chat 네임스페이스 연결 됨:', socket.id);
     // echo 기법
     socket.on('message', (msg) => {
-        console.log(msg);
+        console.log(`chat>>> ${msg}`);
         //socket.emit('message', msg);
-        io.emit('message', `${socket.id}: ${msg}`);
+        chatNamespace.emit('message', `${socket.id}: ${msg}`);
     });
 
     // socket 접속 해제 시 발생 이벤트
     socket.on('disconnect', () => {
-        console.log(`사용자 연결 해제: ${socket.id}`);
+        console.log(`Chat 소켓 사용자 연결 해제: ${socket.id}`);
     });
 });
+
+newsNamespace.on('connection', (socket)=>{
+    console.log('News 네임스페이스 연결 됨:', socket.id);
+    // echo 기법
+    socket.on('message', (msg) => {
+        console.log(`news>>> ${msg}`);
+        //socket.emit('message', msg);
+        newsNamespace.emit('message', `${socket.id}: ${msg}`);
+    });
+
+    // socket 접속 해제 시 발생 이벤트
+    socket.on('disconnect', () => {
+        console.log(`Chat 소켓 사용자 연결 해제: ${socket.id}`);
+    });
+})
