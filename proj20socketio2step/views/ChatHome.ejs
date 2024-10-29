@@ -100,7 +100,7 @@
             if(messageInput.value !== "") {
                 const msgObj = {
                     room:roomName,
-                    to: document.getElementById('userSelect').value,
+                    targetUserId: document.getElementById('userSelect').value,
                     msg: messageInput.value.trim()
                 };
                 if(chatSocket) chatSocket.emit('message', msgObj );
