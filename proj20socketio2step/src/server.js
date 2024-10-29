@@ -52,10 +52,10 @@ chatNamespace.on('connection', (socket) => {
     // console.log(Object.keys(roomUsers));
     // echo 기법
     socket.on('message', ({room, targetUserId, msg}) => {
-        console.log(`news>>> ${room}, ${to} ${msg}`);
+        console.log(`news>>> ${room}, ${targetUserId} ${msg}`);
         //socket.emit('message', msg);
         //newsNamespace.emit('message', `${socket.id}: ${msg}`);
-        //io.to(to).emit('message', `${room}: ${socket.id}: ${msg}`);
+        //io.to(targetUserId).emit('message', `${room}: ${socket.id}: ${msg}`);
         roomUsers[room][targetUserId].emit('message', `${room}: ${socket.id}: ${msg}`);
     });
 
@@ -69,12 +69,20 @@ chatNamespace.on('connection', (socket) => {
         roomUsers[room][userId] = socket;
         // room별로 저장된 userId 목록
         const roomArr = new Array(Object.keys(roomUsers));
+        let userIdList = [];
         roomArr.forEach((roomName)=>{
-            console.log(Object.keys(roomUsers[roomName]));
+            userIdList.push({roomName: new Array(Object.keys(roomUsers[roomName]))});
         });
         if(socket.currentRoom) socket.leave(socket.currentRoom);
         socket.join(room);
         socket.currentRoom = room;
+
+        const userListData = {
+            userIdList: userIdList,
+            room: room,
+            currUserId: userId
+        }
+        socket.to(room).emit('userListUpdate', userListData);
         socket.to(room).emit('message', `${socket.id}가 ${room}에 참가했습니다.`);
     });
 });

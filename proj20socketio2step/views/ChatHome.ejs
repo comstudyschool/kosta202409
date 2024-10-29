@@ -19,11 +19,8 @@
     </div>
     <div>
         <h1>귓속말 기능</h1>
-        받는이: <select id="userList">
-            <option>사용자1</option>
-            <option>사용자2</option>
-            <option>사용자3</option>
-            <option>사용자4</option>
+        받는이: <select id="userSelect">
+            <option value="all">전체</option>
         </select>
     </div>
     <p>
@@ -61,6 +58,17 @@
                     li.innerHTML = msg;
                     messages.appendChild(li);
                 });
+
+                chatSocket.on('userListUpdate', (data) => {
+                    const userNames = data.userIdList[0].roomName[0];
+                    document.getElementById('userSelect').innerHTML = '<option value="all">전체</option>';
+                    for(let i in userNames) {
+                        const optionTag = document.createElement('option');
+                        optionTag.innerHTML = userNames[i];
+                        optionTag.setAttribute('value', userNames[i]);
+                        document.getElementById('userSelect').appendChild(optionTag);
+                    }
+                });
             });
         });
         newsConnectBtn.addEventListener('click', (event) => {
@@ -92,7 +100,7 @@
             if(messageInput.value !== "") {
                 const msgObj = {
                     room:roomName,
-                    to: targetId.value.trim(),
+                    to: document.getElementById('userSelect').value,
                     msg: messageInput.value.trim()
                 };
                 if(chatSocket) chatSocket.emit('message', msgObj );
