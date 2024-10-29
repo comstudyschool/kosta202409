@@ -43,14 +43,20 @@ io.on('connection', (socket)=>{
 const chatNamespace = io.of('/chat');
 const newsNamespace = io.of('/news');
 
+// room별 사용자 목록
+let roomUsers = {}; // {userId: socket, userId: socket ...}
+
 chatNamespace.on('connection', (socket) => {
     console.log('Chat 네임스페이스 연결 됨:', socket.id);
+    // roomUsers[socket.id] = socket;
+    // console.log(Object.keys(roomUsers));
     // echo 기법
-    socket.on('message', ({room, msg}) => {
-        console.log(`news>>> ${room}, ${msg}`);
+    socket.on('message', ({room, targetUserId, msg}) => {
+        console.log(`news>>> ${room}, ${to} ${msg}`);
         //socket.emit('message', msg);
         //newsNamespace.emit('message', `${socket.id}: ${msg}`);
-        chatNamespace.to(room).emit('message', `${room}: ${socket.id}: ${msg}`);
+        //io.to(to).emit('message', `${room}: ${socket.id}: ${msg}`);
+        roomUsers[room][targetUserId].emit('message', `${room}: ${socket.id}: ${msg}`);
     });
 
     // socket 접속 해제 시 발생 이벤트
@@ -58,8 +64,14 @@ chatNamespace.on('connection', (socket) => {
         console.log(`Chat 소켓 사용자 연결 해제: ${socket.id}`);
     });
 
-    socket.on('joinRoom', (room) => {
-        console.log(socket.currentRoom, room);
+    socket.on('joinRoom', ({room, userId}) => {
+        if(!roomUsers[room]) roomUsers[room] = {};
+        roomUsers[room][userId] = socket;
+        // room별로 저장된 userId 목록
+        const roomArr = new Array(Object.keys(roomUsers));
+        roomArr.forEach((roomName)=>{
+            console.log(Object.keys(roomUsers[roomName]));
+        });
         if(socket.currentRoom) socket.leave(socket.currentRoom);
         socket.join(room);
         socket.currentRoom = room;

@@ -13,8 +13,18 @@
     </div>
     <div>
         <h1>채팅룸 기능</h1>
-        <input type="text" id="roomInput" value="room1" placeholder="방 이름 입력">
-        <button id="joinRoomBtn">방 참가</button>
+        방이름: <input type="text" id="roomInput" value="room1" placeholder="방 이름 입력"><br>
+        사용자: <input type="text" id="userId" value="user1"><br>
+        <button id="joinRoomBtn" style="width:236px">참가</button>
+    </div>
+    <div>
+        <h1>귓속말 기능</h1>
+        받는이: <select id="userList">
+            <option>사용자1</option>
+            <option>사용자2</option>
+            <option>사용자3</option>
+            <option>사용자4</option>
+        </select>
     </div>
     <p>
         메세지: <input type="text" id="messageInput" value="hello world">
@@ -33,6 +43,7 @@
         const sendBtn = document.getElementById('sendBtn');
         const messageInput = document.getElementById('messageInput');
         const messages = document.getElementById('messages');
+        const targetId = document.getElementById('targetId');
 
         var chatSocket = null;
         var newsSocket = null;
@@ -68,8 +79,12 @@
         document.getElementById('joinRoomBtn').addEventListener('click', (event) => {
             const room = roomInput.value;
             roomName = room; // 다른 이벤트 함수에서 접근 가능 하도록 전역 설정.
-            if(newsSocket) newsSocket.emit('joinRoom', room);
-            if(chatSocket) chatSocket.emit('joinRoom', room);
+            const roomData = {
+                room, 
+                userId: document.getElementById('userId').value.trim()
+            }
+            if(newsSocket) newsSocket.emit('joinRoom', roomData);
+            if(chatSocket) chatSocket.emit('joinRoom', roomData);
         });
 
         sendBtn.onclick = function(event) {
@@ -77,7 +92,8 @@
             if(messageInput.value !== "") {
                 const msgObj = {
                     room:roomName,
-                    msg: messageInput.value.trim() 
+                    to: targetId.value.trim(),
+                    msg: messageInput.value.trim()
                 };
                 if(chatSocket) chatSocket.emit('message', msgObj );
                 if(newsSocket) newsSocket.emit('message', msgObj );
