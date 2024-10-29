@@ -26,19 +26,19 @@ const io = new Server(server, {
     cors: {methods: ['GET','POST','PUT','DELETE']}
 });
 
-// io.on('connection', (socket)=>{
-//     console.log('클라이언트 소켓 접속:',  socket.id);
-//     socket.on('message', (msg) => {
-//         console.log(msg);
-//         //socket.emit('message', msg);
-//         io.emit('message', `${socket.id}: ${msg}`);
-//     });
+io.on('connection', (socket)=>{
+    console.log('클라이언트 소켓 접속:',  socket.id);
+    socket.on('message', (msg) => {
+        console.log(msg);
+        //socket.emit('message', msg);
+        io.emit('message', `${socket.id}: ${msg}`);
+    });
 
-//     // socket 접속 해제 시 발생 이벤트
-//     socket.on('disconnect', () => {
-//         console.log(`사용자 연결 해제: ${socket.id}`);
-//     });
-// });
+    // socket 접속 해제 시 발생 이벤트
+    socket.on('disconnect', () => {
+        console.log(`사용자 연결 해제: ${socket.id}`);
+    });
+});
 
 const chatNamespace = io.of('/chat');
 const newsNamespace = io.of('/news');
@@ -46,29 +46,46 @@ const newsNamespace = io.of('/news');
 chatNamespace.on('connection', (socket) => {
     console.log('Chat 네임스페이스 연결 됨:', socket.id);
     // echo 기법
-    socket.on('message', (msg) => {
-        console.log(`chat>>> ${msg}`);
+    socket.on('message', ({room, msg}) => {
+        console.log(`news>>> ${room}, ${msg}`);
         //socket.emit('message', msg);
-        chatNamespace.emit('message', `${socket.id}: ${msg}`);
+        //newsNamespace.emit('message', `${socket.id}: ${msg}`);
+        chatNamespace.to(room).emit('message', `${room}: ${socket.id}: ${msg}`);
     });
 
     // socket 접속 해제 시 발생 이벤트
     socket.on('disconnect', () => {
         console.log(`Chat 소켓 사용자 연결 해제: ${socket.id}`);
+    });
+
+    socket.on('joinRoom', (room) => {
+        console.log(socket.currentRoom, room);
+        if(socket.currentRoom) socket.leave(socket.currentRoom);
+        socket.join(room);
+        socket.currentRoom = room;
+        socket.to(room).emit('message', `${socket.id}가 ${room}에 참가했습니다.`);
     });
 });
 
 newsNamespace.on('connection', (socket)=>{
     console.log('News 네임스페이스 연결 됨:', socket.id);
     // echo 기법
-    socket.on('message', (msg) => {
+    socket.on('message', ({room, msg}) => {
         console.log(`news>>> ${msg}`);
         //socket.emit('message', msg);
-        newsNamespace.emit('message', `${socket.id}: ${msg}`);
+        //newsNamespace.emit('message', `${socket.id}: ${msg}`);
+        newsNamespace.to(room).emit('message', `${room}: ${socket.id}: ${msg}`);
     });
 
     // socket 접속 해제 시 발생 이벤트
     socket.on('disconnect', () => {
         console.log(`Chat 소켓 사용자 연결 해제: ${socket.id}`);
+    });
+
+    socket.on('joinRoom', (room) => {
+        if(socket.currentRoom) socket.leave(socket.currentRoom);
+        socket.join(room);
+        socket.currentRoom = room;
+        socket.to(room).emit('message', `${socket.id}가 ${room}에 참가했습니다.`);
     });
 })

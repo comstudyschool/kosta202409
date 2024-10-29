@@ -11,6 +11,11 @@
         <button id="chatConnectBtn">Chat 네임스페이스 연결</button>
         <button id="newsConnectBtn">News 네임스페이스 연결</button>
     </div>
+    <div>
+        <h1>채팅룸 기능</h1>
+        <input type="text" id="roomInput" value="room1" placeholder="방 이름 입력">
+        <button id="joinRoomBtn">방 참가</button>
+    </div>
     <p>
         메세지: <input type="text" id="messageInput" value="hello world">
         <button id="sendBtn">전송</button>
@@ -31,6 +36,7 @@
 
         var chatSocket = null;
         var newsSocket = null;
+        var roomName = "";
 
         chatConnectBtn.addEventListener('click', (event) => {
             chatSocket = io('http://localhost:3000/chat');
@@ -59,11 +65,22 @@
             });
         });
 
+        document.getElementById('joinRoomBtn').addEventListener('click', (event) => {
+            const room = roomInput.value;
+            roomName = room; // 다른 이벤트 함수에서 접근 가능 하도록 전역 설정.
+            if(newsSocket) newsSocket.emit('joinRoom', room);
+            if(chatSocket) chatSocket.emit('joinRoom', room);
+        });
+
         sendBtn.onclick = function(event) {
             console.log('sendBtn 클릭!');
             if(messageInput.value !== "") {
-                if(chatSocket) chatSocket.emit('message', messageInput.value.trim() );
-                if(newsSocket) newsSocket.emit('message', messageInput.value.trim() );
+                const msgObj = {
+                    room:roomName,
+                    msg: messageInput.value.trim() 
+                };
+                if(chatSocket) chatSocket.emit('message', msgObj );
+                if(newsSocket) newsSocket.emit('message', msgObj );
                 messageInput.value = "";
                 return;
             }
