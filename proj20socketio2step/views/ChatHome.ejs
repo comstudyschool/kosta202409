@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>채팅 기능 구현</h1>
+    <p>
+        메세지: <input type="text" id="messageInput" value="hello world">
+        <button id="sendBtn">전송</button>
+    </p>
+    <div>
+        결과: <ul id="messages"></ul>
+    </div>
+    
+    <!-- <script src="/socket.io/socket.io.js"></script> -->
+    <script src="https://cdn.socket.io/4.8.0/socket.io.min.js"></script>
+    <script>
+        const sendBtn = document.getElementById('sendBtn');
+        const messageInput = document.getElementById('messageInput');
+        const messages = document.getElementById('messages');
+
+        var socket = io('http://localhost:3000');
+        socket.on('connect', (data)=>{
+            console.log('>>> 소켓 서버 접속 완료')
+        });
+
+        if(socket){
+            sendBtn.addEventListener('click', (event) => {
+                if(messageInput.value !== "") {
+                    socket.emit('message', messageInput.value.trim() );
+                    messageInput.value = "";
+                    return;
+                }
+                alert("메세지를 입력 하세요!");
+                messageInput.focus();
+            });
+
+            socket.on('message', (data) => {
+                console.log('server>>>', data);
+                // const li = document.createElement('li');
+                // li.textContent = msg;
+                // messages.appendChild(li);
+                let html = messages.innerHTML + `<li>${data}</li>`;
+                console.dir(messages);
+                messages.innerHTML = html;
+            });
+        } else {
+            console.log('소켓이 연결되지 않았습니다!')
+        }
+    </script>
+</body>
+</html>

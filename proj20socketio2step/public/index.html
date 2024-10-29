@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>채팅 기능 구현</h1>
+    <!-- <script src="/socket.io/socket.io.js"></script> -->
+    <script src="https://cdn.socket.io/4.8.0/socket.io.min.js"></script>
+    <script>
+        var socket = io('http://localhost:3000');
+        if(socket){
+            socket.on('connect', (data)=>{
+                console.log("소켓 서버에 접속 완료!");
+                socket.on('hello', (data)=>{
+                    console.log(data);
+                });
+
+                socket.emit('message', '안녕 서버');
+            });
+        } else {
+            console.log('소켓이 연결되지 않았습니다!')
+        }
+    </script>
+</body>
+</html>
